@@ -1,0 +1,12 @@
+C:\Users\malbu\Desktop\WebApp\GameWebApp\GameWebApp\bin\GameWebApp.dll.config
+C:\Users\malbu\Desktop\WebApp\GameWebApp\GameWebApp\bin\GameWebApp.dll
+C:\Users\malbu\Desktop\WebApp\GameWebApp\GameWebApp\bin\GameWebApp.pdb
+C:\Users\malbu\Desktop\WebApp\GameWebApp\GameWebApp\obj\Debug\GameWebApp.dll
+C:\Users\malbu\Desktop\WebApp\GameWebApp\GameWebApp\obj\Debug\GameWebApp.pdb
+C:\Users\malbu\Desktop\WebApp\GameWebApp\GameWebApp\obj\Debug\GameWebApp.csprojResolveAssemblyReference.cache
+H:\Game\GameWebApp\GameWebApp\GameWebApp\bin\GameWebApp.dll.config
+H:\Game\GameWebApp\GameWebApp\GameWebApp\bin\GameWebApp.dll
+H:\Game\GameWebApp\GameWebApp\GameWebApp\bin\GameWebApp.pdb
+H:\Game\GameWebApp\GameWebApp\GameWebApp\obj\Debug\GameWebApp.csprojResolveAssemblyReference.cache
+H:\Game\GameWebApp\GameWebApp\GameWebApp\obj\Debug\GameWebApp.dll
+H:\Game\GameWebApp\GameWebApp\GameWebApp\obj\Debug\GameWebApp.pdb
