@@ -1,6 +1,15 @@
-﻿body {
-}
-
-canvas {
-    border: solid 1px red;
+﻿canvas {
+    padding: 0;
+    margin: auto;
+    display: block;
+    width: 800px;
+    height: 600px;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    border-radius: 25px;
+    border: 2px solid #B73D15;
+    padding: 10px;
 }
