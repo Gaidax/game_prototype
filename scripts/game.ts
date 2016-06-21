@@ -22,8 +22,11 @@ var back_button: createjs.Bitmap;
 var background: createjs.Bitmap;
 var transition: createjs.Bitmap;
 var text_message: createjs.Text = new createjs.Text;
+var button_option = new createjs.Text;
+var ScreenText = new createjs.Text;
 var canvas = document.getElementById("canvas");
-var stop = true;
+var t2;
+var tc;
 
 function init() {
 
@@ -70,6 +73,31 @@ function preload() {
         { id: "hollow", src: "images/endings/hollow.jpg" },
         { id: "peace", src: "images/endings/peacefull_end.jpg" },
         { id: "mad", src: "images/endings/madness_cosmos.jpg" },
+        { id: "start_text", src: "texts/FirstStage.txt" },
+        { id: "inside_text", src: "texts/InsideStage.txt" },
+        { id: "away_text", src: "texts/AwayStage.txt" },
+        { id: "mountain_text", src: "texts/Mountains.txt" },
+        { id: "forest_text", src: "texts/Forest.txt" },
+        { id: "forest_pink_text", src: "texts/Forest_Pink.txt" },
+        { id: "crack_text", src: "texts/BreakDoor.txt" },
+        { id: "knock_flute_text", src: "texts/KnockFlute.txt" },
+        { id: "madness_text", src: "texts/MadnessEnding.txt" },
+        { id: "lost_hand_text", src: "texts/PinkTakesHand.txt" },
+        { id: "talked_to_pink_text", src: "texts/TalkedToPink.txt" },
+        { id: "chin_kills_text", src: "texts/ChinKills.txt" },
+        { id: "hollow_text", src: "texts/Hollow.txt" },
+        { id: "cage_ending_text", src: "texts/Cage.txt" },
+        { id: "strange_killed_text", src: "texts/StrangeKilled.txt" },
+        { id: "good_ending_text", src: "texts/GoodEnd.txt" },
+        { id: "maddness_ending", src: "images/endings/madness_cosmos.jpg" },
+        { id: "hollow_ending", src: "images/endings/hollow.jpg" },
+        { id: "you_died", src: "images/endings/You-Died.jpg" },
+        { id: "strange_cage_ending", src: "images/endings/cage_ending.jpg" },
+        { id: "good_ending", src: "images/endings/peacefull_ending.jpg" },
+        { id: "pink_takes_hand_ending", src: "images/endings/hand_end.jpg" },
+        { id: "knock_flute_text", src: "texts/Knock_Flute.txt" },
+        { id: "forest_pink_text", src: "texts/Forest_Pink.txt" },
+        { id: "knock_text", src: "texts/KnockDoor.txt" },                  
             ]);   
 }
 
@@ -84,27 +112,67 @@ function main() {
 
 }
 
+//function that displays short messages on screen
 function displayMessage(text: string): void {
     stage.removeChild(text_message);
-    text_message = new createjs.Text(text, "20px Trirong serif", "#B73D15");
-    text_message.x = 60;
-    text_message.y = 200;
+
+    stage.removeChild(ScreenText);
+    stage.removeChild(t2);
+    text_message = new createjs.Text(text, "20px Trirong serif", "#346D80");
+    text_message.outline = 3;
     text_message.textBaseline = "alphaba";
+
+    t2 = text_message.clone();
+    t2.outline = 0;
+    t2.color = "121010";
+    text_message.x = 20;
+    text_message.y = 90;
+    t2.x = text_message.x;
+    t2.y = text_message.y;
+
     stage.addChild(text_message);
+    stage.addChild(t2);
 }
 
-function mouse_over (_button) {
-    console.log("OVER");
+//button handling
+function mouse_over (_button, text) {
     _button.filters = [
         //new createjs.ColorFilter(0, 0, 0, 1, 255, 0, 0),
         new createjs.BlurFilter(5, 5, 10),
         new createjs.AlphaMaskFilter(_button.cacheCanvas)
     ];
     _button.cache(0, 0, 100, 100);
+    button_option = new createjs.Text(text, "20px Trirong serif", "#000000");
+    button_option.x = 120;
+    button_option.y = 250;
+    button_option.outline = 3;
+    tc = button_option.clone();
+    tc.outline = 0;
+    tc.color = "WHITE";
+    tc.x = button_option.x;
+    tc.y = button_option.y;
+
+    stage.addChild(button_option);
+    stage.addChild(tc);  
 }
 
 function mouse_out(_button) {
-    console.log("OUT");
     _button.filters = [];
     _button.updateCache();
+    stage.removeChild(button_option);
+    stage.removeChild(tc);
+}
+
+//reads text from files and displays it on stages 
+function setText(textfile) {
+    displayMessage(assets.getResult(textfile));   
+}
+
+function changeScreen() {
+    if (button && button2 && background && back_button) {
+        createjs.Tween.get(back_button).to({ alpha: 0 }, 1000);
+        createjs.Tween.get(button2).to({ alpha: 0 }, 1000);
+        createjs.Tween.get(button).to({ alpha: 0 }, 1000);
+        createjs.Tween.get(background).to({ alpha: 0 }, 1500);
+    }
 }

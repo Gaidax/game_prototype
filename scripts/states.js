@@ -13,6 +13,9 @@ var __extends = (this && this.__extends) || function (d, b) {
 /// <reference path="abstract_states.ts" />
 /// <reference path="game.ts" />
 /// <reference path="typings/easeljs/easeljs.d.ts" />
+//These classes are classes for states. They all inherit a abstract GameState class
+//They contain a logic for each state/screen - what happens if you click a button, which
+//images are used for a button, if you can go back from this stage or not, e.t.c
 var StartState = (function (_super) {
     __extends(StartState, _super);
     function StartState() {
@@ -106,4 +109,3 @@ var GoesMountains = (function (_super) {
     };
     return GoesMountains;
 }(GameState));
-//# sourceMappingURL=states.js.map

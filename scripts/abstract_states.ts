@@ -6,6 +6,7 @@
 //Last Modified: 6/12/2016
 //****************************************************************************
 
+//These are all of the games' possible states
 enum GameStates {
     START,
     GO_INSIDE,
@@ -24,18 +25,42 @@ enum GameStates {
     TUNE_TO_SALAMANDER,
 }
 
+//these two variables are collectebles that are required for a good ending
 var MAGIC_FLUTE: boolean;
 MAGIC_FLUTE = false;
 var PINK_ALLY: boolean;
 PINK_ALLY = false;
+var MAGIC_FLUTE_TRANSITION: boolean;
+MAGIC_FLUTE_TRANSITION = false;
+var PINK_ALLY_TRANSITION: boolean;
+PINK_ALLY_TRANSITION = false;
 
+//this class represents the logic of all final states
 abstract class FinalState {
-    constructor(message: string) {
+    constructor(text_file: string, end_pic: string) {
+        MAGIC_FLUTE = false;
+        PINK_ALLY = false;
         stage.removeAllChildren();
-        console.log(message);
+        this.end_game(end_pic);
+        setText(text_file);
+    }
+    private end_game(back: string) {
+        background = new createjs.Bitmap(assets.getResult(back));
+        background.regX = background.getBounds().width * 0.5;
+        background.regY = background.getBounds().height * 0.5;
+        background.x = 320;
+        background.y = 240;
+        background.alpha = 0;
+        createjs.Tween.get(background).to({ alpha: 1 }, 2000);
+        stage.addChild(background);
+        background.on("click", function () {
+            stage.removeAllChildren();
+            let sc = new StartState();
+        });
     }
 }
 
+//This is an abstract class for game states. It contains all the logic for game states
 abstract class GameState {
     protected curr_state: GameStates;
     private button_1;
@@ -55,27 +80,34 @@ abstract class GameState {
         this.backTransition();     
     }
 
-    protected backTransition() {
+    //This method desides whether a transition screen is needed for this state, if yes builds a corresponding
+    //transition screen (like a mountains picture) calling display_transition if not just builds a screen
+    //with build_screen call
+    private backTransition() {
         switch (this.curr_state) {
             case GameStates.GO_FOREST:
-                this.display_transition("forest_back", "Go to forest");
+                this.display_transition("forest_back", "The forest is gloomy and dark. You sense danger.");
                 break;
             case GameStates.GO_MOUNTAINS:
-                this.display_transition("mountain_back", "Go mountains");
+                this.display_transition("mountain_back", "It's cold and foggy in the mountains");
                 break;
             case GameStates.KNOCK_IN_DOOR:
-                this.display_transition('knocks_back', "Knocks it");          
+                this.display_transition('knocks_back', "You knock the door calmly.");          
                 break;
             case GameStates.GO_AWAY:
-                console.log("here");
-                console.log(MAGIC_FLUTE);
-                if (MAGIC_FLUTE) {               
-                    this.display_transition('sal_gives_flute', "He gives you the flute");
+                if (MAGIC_FLUTE_TRANSITION) {
+                    MAGIC_FLUTE_TRANSITION = false;               
+                    this.display_transition('sal_gives_flute', "You stop Salamender man "+
+                        "and he gives you his flute.\nApparently, it has some significance.\n Salamander" +
+                        "Man however, dissappeared. He is nowhere to be found\n");
                     break;
                 }
             case GameStates.START:
-                if (PINK_ALLY) {
-                    this.display_transition("pink_friend","Friends with this guy");
+                if (PINK_ALLY_TRANSITION) {
+                    PINK_ALLY_TRANSITION = false;
+                    this.display_transition("pink_friend", "Pink man is attracted to a flute you" +
+                        "got from Salamander man.\n He seems very excited about it and you give it to him." +
+                        "After a couple of songs\n and dances he agrees\n to accompany you on your quest.");
                     break;
                 }
                 
@@ -85,7 +117,9 @@ abstract class GameState {
         }
     }
 
+    //Shows a transition screen (image) an a text, which disappears on click
     private display_transition(image, text) {
+        changeScreen();
         transition = new createjs.Bitmap(assets.getResult(image));
         transition.alpha = 0;
         createjs.Tween.get(transition).to({ alpha: 1 }, 1000);
@@ -97,10 +131,13 @@ abstract class GameState {
     private show = (event) => {
         createjs.Tween.get(transition).to({ alpha: 0 }, 1000);
         stage.removeChild(text_message);
+        //stage.removeChild(transition);
         this.build_screen(this.button_1, this.button_2, this.background);
     }
 
-    protected goBack = () => {
+    //A method for a "go back" button and it's logic. 
+    //Depending on your current state it desides where can you go back
+    private goBack = () => {
         switch (this.curr_state) {
             case GameStates.GO_MOUNTAINS:
                 GameState.stateChange(GameStates.GO_AWAY);
@@ -115,6 +152,69 @@ abstract class GameState {
         }
     }
 
+    //This method returns a string for each button, the string 
+    //explains the action associated with a button
+    private buttonText = (): string =>  {
+
+        switch (this.curr_state) {
+            case GameStates.START:
+                return "Take a closer look to a house|Venture outside";
+            case GameStates.GO_INSIDE:
+                return "Knock the door|Break in";
+            case GameStates.GO_AWAY:
+                return "Travel to mountains|Go in the forest";
+            case GameStates.CRACK_DOOR:
+                return "Punch strange man|Give a hand to a strange man (as a friendly gesture)";
+            case GameStates.KNOCK_IN_DOOR:
+                return "Give hand to a pink man (as a friendly gesture)|Talk to the pink man";
+            case GameStates.GO_MOUNTAINS:
+                return "Stop Salamander man|Tune in to the melody";
+            case GameStates.GO_FOREST:
+                return "Fight evil Chin-Chin|Surrender your soul to Chin-Chin";
+            default: return "ERROR|ERROR";
+            
+        }
+
+    }
+    //This method sets a text for a screen
+    private stageText = () => {
+        switch (this.curr_state) {
+            case GameStates.START:
+                setText("start_text");
+                break;
+            case GameStates.GO_INSIDE:
+                setText("inside_text");
+                break;
+            case GameStates.GO_AWAY:
+                setText("away_text");
+                break;
+            case GameStates.GO_FOREST:
+                if (PINK_ALLY) {
+                    setText("forest_pink_text");
+                    break;
+                }
+                setText("forest_text");
+                break;
+            case GameStates.GO_MOUNTAINS:
+                setText("mountain_text");
+                break;
+            case GameStates.KNOCK_IN_DOOR:
+                if (MAGIC_FLUTE) {
+                    setText("knock_flute_text");
+                    break;
+                }
+                setText("knock_text");
+                break;
+            case GameStates.CRACK_DOOR:
+                setText("crack_text");
+                break;
+            default:
+                displayMessage("There was an error");
+                break;
+        }
+    }
+
+//This method defines state switching logic.
     protected static stateChange(state: GameStates) {
 
         switch (state) {
@@ -147,7 +247,7 @@ abstract class GameState {
             case GameStates.GIVE_HAND_TO_PINK:
                 if (MAGIC_FLUTE) {
                     PINK_ALLY = true;
-                    MAGIC_FLUTE = false;
+                    PINK_ALLY_TRANSITION = true;
                     GameState.stateChange(GameStates.START);
                     break;
                 }
@@ -163,6 +263,7 @@ abstract class GameState {
                 break;
             case GameStates.STOP_SALAMANDER:
                 MAGIC_FLUTE = true;
+                MAGIC_FLUTE_TRANSITION = true;
                 console.log(MAGIC_FLUTE);
                 new GoesAway(GameStates.GO_AWAY);
                 break;
@@ -192,16 +293,13 @@ abstract class GameState {
         }
     }
 
-    protected build_screen(button_add1: string, button_add2: string, back: string) {
+
+//This method builds each screen with two corresponding buttons for each state and a go back button
+    private build_screen(button_add1: string, button_add2: string, back: string) {
 
         stage.removeChild(text_message);
 
-        if (button_add1 && button_add2 && back && back_button) {
-            createjs.Tween.get(back_button).to({ alpha: 0 }, 1000);
-            createjs.Tween.get(button2).to({ alpha: 0 }, 1000);
-            createjs.Tween.get(button).to({ alpha: 0 }, 1000);
-            createjs.Tween.get(background).to({ alpha: 0 }, 1500);
-        }
+        changeScreen();
 
         background = new createjs.Bitmap(assets.getResult(back));
         background.regX = background.getBounds().width * 0.5;
@@ -216,8 +314,8 @@ abstract class GameState {
         button.regX = button.getBounds().width * 0.5;
         button.regY = button.getBounds().height * 0.5;
         button.setBounds(60, 300, 80, 80);
-        button.x = 100;
-        button.y = 300;
+        button.x = 200;
+        button.y = 350;
         button.alpha = 0;
         createjs.Tween.get(button).to({ alpha: 1 }, 2500);
         stage.addChild(button);
@@ -226,8 +324,8 @@ abstract class GameState {
         button2.regX = button.getBounds().width * 0.5;
         button2.regY = button.getBounds().height * 0.5;
         button2.setBounds(60, 300, 80, 80);
-        button2.x = 190;
-        button2.y = 300;
+        button2.x = 400;
+        button2.y = 350;
         button2.alpha = 0;
         createjs.Tween.get(button2).to({ alpha: 1 }, 2500);
         stage.addChild(button2);
@@ -236,26 +334,36 @@ abstract class GameState {
         back_button.regX = button.getBounds().width * 0.5;
         back_button.regY = button.getBounds().height * 0.5;
         back_button.x = 290;
-        back_button.y = 400;
+        back_button.y = 450;
         back_button.alpha = 0;
         createjs.Tween.get(back_button).to({ alpha: 1 }, 2500);
         stage.addChild(back_button);
-        button.on('mouseover', function () {mouse_over(button);});
+
+        var button_text = this.buttonText().split("|", 2);
+        var button1_text = button_text[0];
+        var button2_text = button_text[1];
+
+        button.on('mouseover', function () { mouse_over(button, button1_text);});
         button.on('mouseout', function () { mouse_out(button); });
-        button2.on('mouseover', function () { mouse_over(button2);});
+        button2.on('mouseover', function () { mouse_over(button2, button2_text);});
         button2.on('mouseout', function () { mouse_out(button2);});
-        back_button.on('mouseover', function () { mouse_over(back_button);});
+        back_button.on('mouseover', function () { mouse_over(back_button, "Go Back");});
         back_button.on('mouseout', function () { mouse_out(back_button); });
 
         button.on("click", this.choice_1);
         button2.on("click", this.choice_2);
+
+        //Back button only works when you are able to go back.
+        //Sometimes you can't escape
         if (this.can_go_back) {
             back_button.on("click", this.goBack);
         } else {
             back_button.on("click", function () {
-                displayMessage("At this point you can't go back any more.");
+                displayMessage("You can't go back.");
             });
-        }  
+        }
+
+        this.stageText();
     }
     get state(): GameStates {
         return this.curr_state;
@@ -265,6 +373,7 @@ abstract class GameState {
         this.curr_state = state;
     }
 
+    //Each State has two choises which have to be implemented
     abstract choice_1(event: createjs.MouseEvent): void;
     abstract choice_2(event: createjs.MouseEvent): void;
 

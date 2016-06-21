@@ -13,68 +13,60 @@ var __extends = (this && this.__extends) || function (d, b) {
 /// <reference path="game.ts" />
 /// <reference path="abstract_states.ts" />
 /// <reference path="typings/easeljs/easeljs.d.ts" />
+//These are the ending states.
 var Passify_With_Pink = (function (_super) {
     __extends(Passify_With_Pink, _super);
     function Passify_With_Pink() {
-        _super.call(this, "You passified him and won");
-        displayMessage("DEFEATED EVIL");
+        _super.call(this, "good_ending_text", "good_ending");
     }
     return Passify_With_Pink;
-}(FinalState));
-var StopSalamander = (function (_super) {
-    __extends(StopSalamander, _super);
-    function StopSalamander() {
-        _super.call(this, "You stopped him took fluete");
-    }
-    return StopSalamander;
 }(FinalState));
 var TuneToSalamander = (function (_super) {
     __extends(TuneToSalamander, _super);
     function TuneToSalamander() {
-        _super.call(this, "You lost your mind");
+        _super.call(this, "madness_text", "maddness_ending");
     }
     return TuneToSalamander;
 }(FinalState));
 var PunchesStrange = (function (_super) {
     __extends(PunchesStrange, _super);
     function PunchesStrange() {
-        _super.call(this, "You died");
+        _super.call(this, "strange_killed_text", "you_died");
     }
     return PunchesStrange;
 }(FinalState));
 var GivesStrangeHand = (function (_super) {
     __extends(GivesStrangeHand, _super);
     function GivesStrangeHand() {
-        _super.call(this, "You greated him");
+        _super.call(this, "cage_ending_text", "strange_cage_ending");
     }
     return GivesStrangeHand;
 }(FinalState));
 var GivesPinkHand = (function (_super) {
     __extends(GivesPinkHand, _super);
     function GivesPinkHand() {
-        _super.call(this, "You gave hand (lost hand)");
+        _super.call(this, "lost_hand_text", "pink_takes_hand_ending");
     }
     return GivesPinkHand;
 }(FinalState));
 var SayHiPink = (function (_super) {
     __extends(SayHiPink, _super);
     function SayHiPink() {
-        _super.call(this, "You said hi");
+        _super.call(this, "talked_to_pink_text", "you_died");
     }
     return SayHiPink;
 }(FinalState));
 var GiveSoulToChin = (function (_super) {
     __extends(GiveSoulToChin, _super);
     function GiveSoulToChin() {
-        _super.call(this, "Gave soul and become hollow");
+        _super.call(this, "hollow_text", "hollow_ending");
     }
     return GiveSoulToChin;
 }(FinalState));
 var BadIdea = (function (_super) {
     __extends(BadIdea, _super);
     function BadIdea() {
-        _super.call(this, "Bad Idea, mate, you died");
+        _super.call(this, "chin_kills_text", "you_died");
     }
     return BadIdea;
 }(FinalState));
-//# sourceMappingURL=final_states.js.map
